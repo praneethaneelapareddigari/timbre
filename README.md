@@ -1,6 +1,6 @@
 # timbre — a voice recorder built on Phoenix + React + Rust/WASM
 
-**Live demo:** not deployed yet · **Demo video:** not recorded yet
+**Live demo:** not deployed yet · **Demo video:** [Watch Timbre Demo (11:31)](https://drive.google.com/file/d/1vmfvriAnMZPowOIBykcsKhI_S7USLVs0/view?usp=sharing)
 
 I built all three parts of the assignment, plus the transcription bonus:
 
