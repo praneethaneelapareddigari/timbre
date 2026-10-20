@@ -17,7 +17,8 @@ defmodule TimbreWeb do
   those modules here.
   """
 
-  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
+  # `assets` + `pcm-worklet.js` come from the Vite build (web/dist) in production.
+  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt pcm-worklet.js)
 
   def router do
     quote do

@@ -11,9 +11,10 @@ defmodule TimbreWeb.Endpoint do
     same_site: "Lax"
   ]
 
-  # socket "/live", Phoenix.LiveView.Socket,
-  #   websocket: [connect_info: [session: @session_options]],
-  #   longpoll: [connect_info: [session: @session_options]]
+  # Live multiplayer sessions (Part 3): Phoenix Channels over WebSocket.
+  socket "/socket", TimbreWeb.UserSocket,
+    websocket: true,
+    longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -38,7 +39,8 @@ defmodule TimbreWeb.Endpoint do
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
   plug Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
+    # Recordings are uploaded as multipart; allow clips well beyond the 8 MB default.
+    parsers: [:urlencoded, {:multipart, length: 60_000_000}, :json],
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
 

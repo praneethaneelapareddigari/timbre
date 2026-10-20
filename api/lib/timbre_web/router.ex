@@ -15,5 +15,22 @@ defmodule TimbreWeb.Router do
     pipe_through :api
 
     get "/hello", HelloController, :show
+
+    resources "/recordings", RecordingController, only: [:index, :show, :create, :update, :delete]
+    post "/recordings/:id/transcribe", RecordingController, :transcribe
+
+    post "/sessions", SessionController, :create
+    get "/sessions/:code", SessionController, :show
+  end
+
+  # Media is fetched by <audio> elements, whose Accept headers aren't JSON, so
+  # it sits outside the :api pipeline.
+  scope "/api", TimbreWeb do
+    get "/recordings/:id/audio", RecordingController, :audio
+  end
+
+  # Production: Phoenix also serves the built React app (see SpaController).
+  scope "/", TimbreWeb do
+    get "/", SpaController, :index
   end
 end

@@ -1,0 +1,37 @@
+# Fly.io config. Replace "timbre-voice" with your app name (must be globally
+# unique) in both places, then see README → Deploy.
+app = "timbre-voice"
+primary_region = "bom"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PHX_HOST = "timbre-voice.fly.dev"
+  PORT = "8080"
+  DATABASE_PATH = "/data/timbre.db"
+
+# SQLite lives on a persistent volume. One volume ⇒ one machine, which is also
+# what live sessions need: each session is an in-memory process on that node.
+[mounts]
+  source = "timbre_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    grace_period = "20s"
+    interval = "30s"
+    method = "GET"
+    path = "/healthz"
+    timeout = "5s"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1

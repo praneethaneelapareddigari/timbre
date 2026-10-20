@@ -12,6 +12,9 @@ defmodule Timbre.Application do
       Timbre.Repo,
       {DNSCluster, query: Application.get_env(:timbre, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Timbre.PubSub},
+      # Live sessions: one process per share code, found via the registry.
+      {Registry, keys: :unique, name: Timbre.SessionRegistry},
+      {DynamicSupervisor, name: Timbre.SessionSupervisor, strategy: :one_for_one},
       # Start a worker by calling: Timbre.Worker.start_link(arg)
       # {Timbre.Worker, arg},
       # Start to serve requests, typically the last entry

@@ -1,0 +1,15 @@
+.git
+.direnv
+.nix-mix
+.nix-hex
+**/node_modules
+web/dist
+web/crates/*/pkg
+web/crates/*/target
+target
+api/_build
+api/deps
+api/.tmp
+api/.elixir_ls
+*.log
+.DS_Store

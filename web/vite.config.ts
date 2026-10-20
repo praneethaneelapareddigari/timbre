@@ -18,6 +18,8 @@ export default defineConfig({
     proxy: {
       '/api': { target: 'http://localhost:4010', changeOrigin: true },
       '/healthz': { target: 'http://localhost:4010', changeOrigin: true },
+      // Phoenix Channels (live sessions) — WebSocket upgrade.
+      '/socket': { target: 'ws://localhost:4010', ws: true },
     },
   },
 })
