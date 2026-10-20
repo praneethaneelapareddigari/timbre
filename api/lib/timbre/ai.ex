@@ -12,6 +12,11 @@ defmodule Timbre.AI do
 
   @base_url "https://api.openai.com/v1"
 
+  # Explicitly use the OS CA trust store in production releases.
+  defp http_options do
+    [connect_options: [transport_opts: [cacertfile: "/etc/ssl/certs/ca-certificates.crt"]]]
+  end
+
   @type result :: %{transcript: String.t(), title: String.t(), summary: String.t()}
 
   @spec transcribe_and_summarize(binary(), String.t()) ::
@@ -51,7 +56,8 @@ defmodule Timbre.AI do
     case Req.post(@base_url <> "/audio/transcriptions",
            auth: {:bearer, key},
            form_multipart: [file: file, model: model(:transcribe), response_format: "json"],
-           receive_timeout: 120_000
+           receive_timeout: 120_000,
+           connect_options: http_options()[:connect_options]
          ) do
       {:ok, %{status: 200, body: %{"text" => text}}} -> {:ok, String.trim(text)}
       other -> failure("transcription", other)
@@ -81,7 +87,8 @@ defmodule Timbre.AI do
            Req.post(@base_url <> "/chat/completions",
              auth: {:bearer, key},
              json: body,
-             receive_timeout: 60_000
+             receive_timeout: 60_000,
+             connect_options: http_options()[:connect_options]
            ),
          {:ok, %{"title" => title, "summary" => summary}} <- Jason.decode(content) do
       {:ok, %{title: String.slice(title, 0, 200), summary: summary}}

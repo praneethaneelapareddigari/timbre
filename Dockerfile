@@ -54,12 +54,20 @@ RUN mix compile && mix release
 # exactly the system libraries they were built against.
 FROM ${ELIXIR_IMAGE}
 
+# Provide trusted CA certificates for outbound HTTPS requests.
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && update-ca-certificates \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 RUN mkdir -p /data
 ENV MIX_ENV=prod \
     PHX_SERVER=true \
     PORT=8080 \
     DATABASE_PATH=/data/timbre.db \
+    SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
     LANG=C.UTF-8
 
 COPY --from=api /app/api/_build/prod/rel/timbre ./
