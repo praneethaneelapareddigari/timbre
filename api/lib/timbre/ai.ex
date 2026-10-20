@@ -18,9 +18,21 @@ defmodule Timbre.AI do
           {:ok, result()} | {:error, :ai_not_configured | {:ai_failed, String.t()}}
   def transcribe_and_summarize(audio, mime_type) do
     with {:ok, key} <- api_key(),
-         {:ok, transcript} <- transcribe(key, audio, mime_type),
-         {:ok, %{title: title, summary: summary}} <- summarize(key, transcript) do
-      {:ok, %{transcript: transcript, title: title, summary: summary}}
+         {:ok, transcript} <- transcribe(key, audio, mime_type) do
+      case summarize(key, transcript) do
+        {:ok, %{title: title, summary: summary}} ->
+          {:ok, %{transcript: transcript, title: title, summary: summary}}
+
+        {:error, reason} ->
+          Logger.warning("Summary unavailable; preserving transcript: #{inspect(reason)}")
+
+          {:ok,
+           %{
+             transcript: transcript,
+             title: "Transcribed recording",
+             summary: "Transcript available below."
+           }}
+      end
     end
   end
 
