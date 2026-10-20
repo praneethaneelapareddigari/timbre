@@ -1,6 +1,6 @@
 # timbre — a voice recorder built on Phoenix + React + Rust/WASM
 
-**Live demo:** not deployed yet · **Demo video:** [Watch Timbre Demo (11:31)](https://drive.google.com/file/d/1vmfvriAnMZPowOIBykcsKhI_S7USLVs0/view?usp=sharing)
+**Live demo:** [Open Timbre](https://timbre-arsg.onrender.com/) · **Demo video:** [Watch walkthrough](https://drive.google.com/file/d/1vmfvriAnMZPowOIBykcsKhI_S7USLVs0/view?usp=sharing)
 
 I built all three parts of the assignment, plus the transcription bonus:
 
@@ -99,3 +99,10 @@ Install Elixir 1.18+, Node 22+, Rust via [rustup](https://rustup.rs) with `rustu
 | `just build` | production build of web + API |
 
 Run `just --list` for everything else (`api`, `web`, `build-wasm`, `db-*`).
+
+### Deployment and transcription notes
+
+- Live demo runs on Render's free tier; the service may take time to wake up after inactivity.
+- AI transcription, titles, and summaries use the OpenAI API and require a configured `OPENAI_API_KEY` with available API credits.
+- The transcription endpoint and error handling are implemented, but a successful live transcript has not yet been verified because the API account returned HTTP 429 (no credits remaining).
+- Render's free instance uses ephemeral storage; saved recordings may be lost when the instance restarts or is replaced.
